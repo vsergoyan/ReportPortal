@@ -13,6 +13,7 @@ jobs:
 
     env:
       TEST_ENV: web
+      HEADLESS: true
       RP_USERNAME: ${{ secrets.RP_USERNAME }}
       RP_PASSWORD: ${{ secrets.RP_PASSWORD }}
       RP_API_KEY: ${{ secrets.RP_API_KEY }}
@@ -39,4 +40,3 @@ jobs:
         with:
           name: playwright-report
           path: playwright-report
-          
