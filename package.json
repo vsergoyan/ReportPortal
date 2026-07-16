@@ -1,0 +1,41 @@
+{
+  "name": "reportportal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:chrome": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "test:headed": "HEADLESS=false playwright test --project=chromium",
+    "test:headless": "HEADLESS=true playwright test --project=chromium",
+    "test:local": "TEST_ENV=local playwright test --project=chromium",
+    "test:web": "TEST_ENV=web playwright test --project=chromium",
+    "test:local:headed": "TEST_ENV=local HEADLESS=false playwright test --project=chromium",
+    "test:web:headed": "TEST_ENV=web HEADLESS=false playwright test --project=chromium",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vardeniSergoyan/ReportPortal.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vardeniSergoyan/ReportPortal/issues"
+  },
+  "homepage": "https://github.com/vardeniSergoyan/ReportPortal#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^26.1.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@reportportal/agent-js-playwright": "^5.4.1",
+    "dotenv": "^17.4.2",
+    "winston": "^3.19.0"
+  }
+}

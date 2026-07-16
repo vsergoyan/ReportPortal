@@ -1,0 +1,42 @@
+name: Playwright CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      TEST_ENV: web
+      RP_USERNAME: ${{ secrets.RP_USERNAME }}
+      RP_PASSWORD: ${{ secrets.RP_PASSWORD }}
+      RP_API_KEY: ${{ secrets.RP_API_KEY }}
+      RP_ENDPOINT: ${{ secrets.RP_ENDPOINT }}
+      RP_PROJECT: ${{ secrets.RP_PROJECT }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx playwright install --with-deps
+
+      - run: npm run test:web
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          
