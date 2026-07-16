@@ -6,9 +6,12 @@ export class ConfigManager {
         dotenv.config({
             path: `.env.${environment}`
         });
-        return {
 
+        return {
             baseUrl: process.env.BASE_URL || '',
+            reportPortalEndpoint: process.env.RP_ENDPOINT || '',
+            reportPortalProject: process.env.RP_PROJECT || '',
+            reportPortalApiKey: process.env.RP_API_KEY || '',
             username: process.env.RP_USERNAME || '',
             password: process.env.RP_PASSWORD || '',
             environment,

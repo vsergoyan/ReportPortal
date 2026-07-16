@@ -14,6 +14,7 @@ jobs:
     env:
       TEST_ENV: web
       HEADLESS: true
+      BASE_URL: ${{ secrets.BASE_URL }}
       RP_USERNAME: ${{ secrets.RP_USERNAME }}
       RP_PASSWORD: ${{ secrets.RP_PASSWORD }}
       RP_API_KEY: ${{ secrets.RP_API_KEY }}
