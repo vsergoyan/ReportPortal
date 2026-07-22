@@ -28,7 +28,8 @@ src
 ├── business
 │   └── pages
 │       ├── BasePage.ts
-│       └── LoginPage.ts
+│       ├── LoginPage.ts
+│       └── index.ts
 │
 ├── core
 │   ├── config
@@ -36,7 +37,8 @@ src
 │   └── utils
 │
 ├── fixtures
-│   └── test.fixture.ts
+│   ├── test.fixture.ts
+│   └── index.ts
 │
 └── tests
     └── simple.spec.ts

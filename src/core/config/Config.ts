@@ -1,5 +1,4 @@
 export interface Config {
-    baseUrl: string;
     reportPortalEndpoint: string;
     reportPortalProject: string;
     reportPortalApiKey: string;

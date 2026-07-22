@@ -6,10 +6,10 @@ export class LoginPage extends BasePage {
 
     constructor(page: Page) {
         super(page);
-        this.loginButton = page.locator('button[type="submit"]');
+        this.loginButton = page.locator('//button[text()="Login"]');
     }
 
     async open() {
-        await this.page.goto(this.config.baseUrl);
+        await this.navigate('/');
     }
 }

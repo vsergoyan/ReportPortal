@@ -1,5 +1,4 @@
-export * from './datUtils';
+export * from './dateUtils';
 export * from './fileUtils';
 export * from './randomUtils';
 export * from './stringUtils';
-export * from './waitUtils';
