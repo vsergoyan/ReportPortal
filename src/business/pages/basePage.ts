@@ -1,4 +1,4 @@
-import { expect, Locator, Page } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 import { ConfigurationService } from '../../core/config';
 
 export abstract class BasePage {
@@ -11,5 +11,9 @@ export abstract class BasePage {
     
     async getText(locator: Locator): Promise<string> {
         return (await locator.textContent()) ?? '';
+    }
+
+    async waitForTimeout(timeoutMs: number) {
+        this.page.waitForTimeout(timeoutMs);
     }
 }
