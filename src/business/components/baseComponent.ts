@@ -3,6 +3,10 @@ import { expect, Locator } from '@playwright/test';
 export abstract class BaseComponent {
     constructor(protected readonly root: Locator) {}
 
+    getLocator(): Locator {
+        return this.root;
+    }
+
     async expectVisible(): Promise<void> {
         await expect(this.root).toBeVisible();
     }

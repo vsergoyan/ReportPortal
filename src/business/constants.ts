@@ -1,6 +1,12 @@
 export const userInfo = {
-    "invalid": {
-        "username": "wrong",
-        "password": "wrong",
-    }
+    get valid() {
+        return {
+            username: process.env.RP_USERNAME ?? '',
+            password: process.env.RP_PASSWORD ?? '',
+        };
+    },
+    invalid: {
+        username: 'wrong',
+        password: 'wrong',
+    },
 };
