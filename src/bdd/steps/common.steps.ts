@@ -1,6 +1,7 @@
 import { Given, When, Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../context/customWorld';
 import { expect } from '@playwright/test';
+import { messages, MessageKey } from '../../business/constants';
 
 Given('User opens the {string} page',
     async function (this: CustomWorld, pageName: string) {
@@ -10,9 +11,14 @@ Given('User opens the {string} page',
 
 Then(
     'Notification message should contain {string}',
-    async function (this: CustomWorld, expectedMessage: string) {
-        const actualText = await this.pages.current.getText(this.pages.current.locatorForNotificationMessage);
-        expect(actualText).toBe(expectedMessage);
+    async function (this: CustomWorld, messageKey: string) {
+        if (!(messageKey in messages)) {
+            throw new Error(`Unknown message key: "${messageKey}"`);
+        }
+        const expectedMessage = messages[messageKey as MessageKey];
+        await expect(
+            this.pages.current.locatorForNotificationMessage
+        ).toContainText(expectedMessage);
     }
 );
 

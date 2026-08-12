@@ -7,5 +7,5 @@ Feature: Login flow
 
   Examples:
   | credentials | message |
-  | valid       | Signed in successfully |
-  | invalid     | An error occurred while connecting to server: You do not have enough permissions. Bad credentials |
+  | valid       | successfullLogin |
+  | invalid     | badCredentials   |

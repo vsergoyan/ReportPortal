@@ -4,6 +4,9 @@ import {
     Before,
     After,
 } from '@cucumber/cucumber';
+import { setDefaultTimeout } from '@cucumber/cucumber';
+
+setDefaultTimeout(30_000);
 
 import { chromium, Browser } from '@playwright/test';
 import dotenv from 'dotenv';

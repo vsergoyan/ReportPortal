@@ -2,6 +2,7 @@ import { Locator, Page } from '@playwright/test';
 import { BasePage } from './basePage';
 import { DeleteLaunchModal } from '../components/deleteLaunchModal';
 import { CompareLaunchesModal } from '../components/compareLaunchModal';
+import { API_PATHS } from '../constants';
 
 export class LaunchesPage extends BasePage {
     readonly launches: Locator;
@@ -64,5 +65,20 @@ export class LaunchesPage extends BasePage {
 
     async getLastBreadcrumbText(): Promise<string> {
         return (await this.breadcrumbItems.last().textContent())?.trim() ?? '';
+    }
+
+    async openLaunchByIndex(index: number): Promise<void> {
+        const launchPath = API_PATHS.launch.replace(
+            '{project}',
+            this.config.reportPortalProject.toLocaleLowerCase()
+        );
+        await Promise.all([
+            this.page.waitForResponse(response =>
+                response.request().method() === 'GET' &&
+                response.url().includes(launchPath) &&
+                response.status() === 200
+            ),
+            this.getLaunchNameLocatorByIndex(index).click(),
+        ]);
     }
 }
