@@ -58,7 +58,7 @@ Then(
         const actual = StringUtils.removeWhitespace(
             await this.pages.launches.getLastBreadcrumbText()
         );
-        expect(expected).toBe(actual);
+        expect(actual).toBe(expected);
     }
 );
 
