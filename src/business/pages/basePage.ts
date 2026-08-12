@@ -3,7 +3,11 @@ import { ConfigurationService } from '../../core/config';
 
 export abstract class BasePage {
     protected readonly config = ConfigurationService.getConfig();    
-    constructor(protected readonly page: Page) {}
+    readonly locatorForNotificationMessage: Locator;
+    
+    constructor(protected readonly page: Page) {
+        this.locatorForNotificationMessage = page.locator("div[class*='notificationList'] h2");
+    }
 
     async navigate(url: string): Promise<void> {
         await this.page.goto(url);
@@ -11,9 +15,5 @@ export abstract class BasePage {
     
     async getText(locator: Locator): Promise<string> {
         return (await locator.textContent()) ?? '';
-    }
-
-    async waitForTimeout(timeoutMs: number) {
-        this.page.waitForTimeout(timeoutMs);
     }
 }

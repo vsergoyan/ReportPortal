@@ -6,6 +6,6 @@ export class DeleteLaunchModal extends BaseComponent {
 
     constructor(root: Locator) {
         super(root);
-        this.deleteButton = root.locator('//button[normalize-space()="Delete"]');
+        this.deleteButton = root.getByRole('button', { name: 'Delete' });
     }
 }

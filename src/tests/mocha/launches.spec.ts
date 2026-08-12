@@ -4,6 +4,7 @@ import { LaunchesPage } from '../../business/pages/launchesPage';
 import { page, config } from './hooks';
 import { expect } from '@playwright/test';
 import { StringUtils } from '../../core/utils/stringUtils';
+import { messages } from '../../business/constants';
 
 describe('ReportPortal Launches', () => {
     let launchesPage: LaunchesPage;
@@ -11,7 +12,7 @@ describe('ReportPortal Launches', () => {
         const loginPage = new LoginPage(page);
         await loginPage.open();
         await loginPage.login(config.username, config.password);
-        await expect(loginPage.locatorForNotificationMessage).toContainText('Signed in successfully');
+        await expect(loginPage.locatorForNotificationMessage).toContainText(messages.successfullLogin);
 
         launchesPage = new LaunchesPage(page);
         await launchesPage.open();
@@ -30,7 +31,8 @@ describe('ReportPortal Launches', () => {
     });
 
     it('Should be able to compare launches', async () => {
-        for (let i = 1; i < 3; i++) {
+        const LAUNCHES_TO_COMPARE = 2;
+        for (let i = 1; i <= LAUNCHES_TO_COMPARE; i++) {
             await launchesPage.getCheckIconLocatorByIndex(i).click();
         }
         await launchesPage.actionsButton.click();
@@ -43,14 +45,7 @@ describe('ReportPortal Launches', () => {
 
     it('Should be able to move to appropriate launch view clicking on Launch name', async () => {
         const firstLaunchName = await launchesPage.getLaunchName(1);
-        await Promise.all([
-            page.waitForResponse(response =>
-                response.request().method() === 'GET' &&
-                response.url().includes('/api/v1/vsergoyan_personal/launch/') &&
-                response.status() === 200
-            ),
-            await launchesPage.getLaunchNameLocatorByIndex(1).click(),
-        ]);
+        await launchesPage.openLaunchByIndex(1);
         const lastBreadcrumbText = await launchesPage.getLastBreadcrumbText();
         expect(
             StringUtils.removeWhitespace(lastBreadcrumbText)

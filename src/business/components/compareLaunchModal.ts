@@ -6,6 +6,6 @@ export class CompareLaunchesModal extends BaseComponent {
 
     constructor(root: Locator) {
         super(root);
-        this.cancelButton = root.locator('xpath=.//button[text()="Cancel"]');
+        this.cancelButton = root.getByRole('button', { name: 'Cancel' });
     }
 }

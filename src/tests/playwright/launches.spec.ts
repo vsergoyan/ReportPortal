@@ -1,24 +1,20 @@
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../../business/pages/loginPage';
-import { LaunchesPage } from '../../business/pages/launchesPage';
+import { expect } from '@playwright/test';
 import { ConfigurationService } from '../../core/config';
 import { StringUtils } from '../../core/utils/stringUtils';
+import { test } from '../../fixtures/test.fixture';
+import { messages } from 'src/business/constants';
 
 const config = ConfigurationService.getConfig();
 
 test.describe('ReportPortal Launches', () => {
-    let launchesPage: LaunchesPage;
-    test.beforeEach(async ({ page }) => {
-        const loginPage = new LoginPage(page);
+    test.beforeEach(async ({ loginPage, launchesPage }) => {
         await loginPage.open();
         await loginPage.login(config.username, config.password);
-        await expect(loginPage.locatorForNotificationMessage).toContainText('Signed in successfully');
-
-        launchesPage = new LaunchesPage(page);
+        await expect(loginPage.locatorForNotificationMessage).toContainText(messages.successfullLogin);
         await launchesPage.open();
     });
 
-    test('Should be able to delete launch', async () => {
+    test('Should be able to delete launch', async ({ launchesPage }) => {
         await launchesPage.getLaunchNameLocatorByIndex(1).waitFor({state: 'visible'});
         const launchesCountBeforeDelete = await launchesPage.launches.count();
         const lastLaunchNameBeforeDelete = await launchesPage.getLaunchName(launchesCountBeforeDelete);
@@ -30,8 +26,9 @@ test.describe('ReportPortal Launches', () => {
         expect(lastLaunchNameAfterDelete).not.toBe(lastLaunchNameBeforeDelete);
     });
 
-    test('Should be able to compare launches', async () => {
-        for (let i = 1; i < 3; i++) {
+    test('Should be able to compare launches', async ({ launchesPage }) => {
+        const LAUNCHES_TO_COMPARE = 2;
+        for (let i = 1; i <= LAUNCHES_TO_COMPARE; i++) {
             await launchesPage.getCheckIconLocatorByIndex(i).click();
         }
         await launchesPage.actionsButton.click();
@@ -41,16 +38,9 @@ test.describe('ReportPortal Launches', () => {
         await launchesPage.compareLaunchesModal.expectHidden();
     });
 
-    test('Should be able to move to appropriate launch view clicking on Launch name', async ({ page }) => {
+    test('Should be able to move to appropriate launch view clicking on Launch name', async ({ launchesPage }) => {
         const firstLaunchName = await launchesPage.getLaunchName(1);
-        await Promise.all([
-            page.waitForResponse(response =>
-                response.request().method() === 'GET' &&
-                response.url().includes('/api/v1/vsergoyan_personal/launch/') &&
-                response.status() === 200
-            ),
-            launchesPage.getLaunchNameLocatorByIndex(1).click(),
-        ]);
+        await launchesPage.openLaunchByIndex(1);
         const lastBreadcrumbText = await launchesPage.getLastBreadcrumbText();
         expect(
             StringUtils.removeWhitespace(lastBreadcrumbText)
