@@ -14,7 +14,7 @@
   },
   "include": [
     "**/*.ts"
-  ],
+, "cucumber.js"  ],
   "exclude": [
     "node_modules"
   ]
