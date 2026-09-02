@@ -1,7 +1,7 @@
-import { Page } from "@playwright/test";
-import { LaunchesPage } from "../../business/pages/launchesPage";
-import { LoginPage } from "../../business/pages/loginPage";
-import { BasePage } from "../../business/pages/basePage";
+import { Page } from '@playwright/test';
+import { LaunchesPage } from '../../business/pages/launchesPage';
+import { LoginPage } from '../../business/pages/loginPage';
+import { BasePage } from '../../business/pages/basePage';
 
 export class Pages {
     current!: BasePage;
