@@ -8,7 +8,7 @@ import { AxiosApiClient } from '../api/clients/axiosApiClient';
 import { ReportPortalAuthenticator } from '../api/auth/apiAuthenticator';
 import { ConfigurationService } from '../core/config/ConfigurationService';
 import { LaunchesApi } from '../api/services/launchApi';
-import { DashboardApi } from 'src/api/services/dashboardApi';
+import { DashboardApi } from '../api/services/dashboardApi';
 
 type Fixtures = {
     loginPage: LoginPage;

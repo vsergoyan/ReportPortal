@@ -8,6 +8,7 @@ import { ApiErrorResponse } from '../../api/models/errorResponse';
 
 import { test, expect } from '../../fixtures/test.fixture';
 import { LaunchStatus } from '../../api/models/launchStatus';
+import { invalidLaunchId, API_ERROR_MESSAGES } from '../../business/constants';
 
 test.describe('Launches', () => {
     let createdLaunchUuid: string;
@@ -52,13 +53,12 @@ test.describe('Launches', () => {
     });
 
     test('Get launch with invalid id', async ({ launchesApi }) => {
-        const invalidLaunchId = '99999999';
         const response = await launchesApi.getLaunch(invalidLaunchId);
         expect(response.status()).toBe(404);
 
         const body: ApiErrorResponse = await response.json();
         expect(body.errorCode).toBe(4041);
-        expect(body.message).toContain('not found');
+        expect(body.message).toContain(API_ERROR_MESSAGES.notFoundError);
     });
 
     test('Create launch', async ({ launchesApi }) => {
@@ -83,7 +83,7 @@ test.describe('Launches', () => {
         expect(response.status()).toBe(400);
         const body: ApiErrorResponse = await response.json();
         expect(body.errorCode).toBe(4001);
-        expect(body.message).toContain('Incorrect Request. I/O error while reading input message');
+        expect(body.message).toContain(API_ERROR_MESSAGES.incorrectRequest);
     });
 
     test('Create launch with invalid name', async ({ launchesApi }) => {
@@ -95,7 +95,7 @@ test.describe('Launches', () => {
 
         const body: ApiErrorResponse = await response.json();
         expect(body.errorCode).toBe(4001);
-        expect(body.message).toContain("Incorrect Request. [Field 'name' should not contain only white spaces and shouldn't be empty. Field 'name' should have size from '1' to '256'.] ");
+        expect(body.message).toContain(API_ERROR_MESSAGES.incorrectRequestEmptyName);
     });
 
     test('Finish launch', async ({ launchesApi }) => {
@@ -118,13 +118,12 @@ test.describe('Launches', () => {
     });
 
     test('Finish launch with invalid id', async ({ launchesApi }) => {
-        const invalidLaunchId = '99999999';
         const response = await launchesApi.finishLaunch(invalidLaunchId, LaunchStatus.PASSED);
         expect(response.status()).toBe(404);
 
         const body: ApiErrorResponse = await response.json();
         expect(body.errorCode).toBe(4041);
-        expect(body.message).toContain('not found');
+        expect(body.message).toContain(API_ERROR_MESSAGES.notFoundError);
     });
 
     test('Finish launch with invalid status', async ({ launchesApi }) => {
@@ -142,7 +141,7 @@ test.describe('Launches', () => {
 
         const body: ApiErrorResponse = await finishResponse.json();
         expect(body.errorCode).toBe(4001);
-        expect(body.message).toContain("Incorrect Request. [Value is not allowed for field 'status'.]");
+        expect(body.message).toContain(API_ERROR_MESSAGES.incorrectRequestValueNotAllowed);
     });
 
     test('Delete launch', async ({ launchesApi }) => {
@@ -174,13 +173,12 @@ test.describe('Launches', () => {
     });
 
     test('Delete launch with invalid id', async ({ launchesApi }) => {
-        const invalidId = 99999999;
-        const deleteResponse = await launchesApi.deleteLaunch(invalidId);
+        const deleteResponse = await launchesApi.deleteLaunch(+invalidLaunchId);
         expect(deleteResponse.status()).toBe(404);
 
         const body: ApiErrorResponse = await deleteResponse.json();
         expect(body.errorCode).toBe(4041);
-        expect(body.message).toContain('not found');
+        expect(body.message).toContain(API_ERROR_MESSAGES.notFoundError);
     });
 
     test.afterEach(async ({ launchesApi }) => {

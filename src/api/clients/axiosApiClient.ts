@@ -32,6 +32,7 @@ export class AxiosApiClient implements ApiClient {
     ) {
         this.client = axios.create({
             baseURL: config.reportPortalEndpoint,
+            timeout: 15000,
         });
     }
 

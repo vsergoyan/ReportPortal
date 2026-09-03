@@ -5,6 +5,7 @@ import {
 } from '../../api/models/dashboardResponse';
 import { PatchDashboardRequest } from '../../api/models/dashboardRequest';
 import { ApiErrorResponse } from '../../api/models/errorResponse';
+import { API_ERROR_MESSAGES, invalidLaunchId } from 'src/business/constants';
 
 test.describe('Dashboards', () => {
     let createdDashboardId: number;
@@ -32,13 +33,12 @@ test.describe('Dashboards', () => {
     });
 
     test('Patch dashboard with invalid id', async ({ dashboardApi }) => {
-        const invalidId = '999999999';
-        const response = await dashboardApi.patchDashboard(invalidId, { locked: true });
+        const response = await dashboardApi.patchDashboard(invalidLaunchId, { locked: true });
         expect(response.status()).toBe(404);
 
         const body: ApiErrorResponse = await response.json();
         expect(body.errorCode).toBe(40422);
-        expect(body.message).toContain('not found');
+        expect(body.message).toContain(API_ERROR_MESSAGES.notFoundError);
     });
 
     test('Patch dashboard with invalid locked value', async ({ dashboardApi }) => {
@@ -61,7 +61,7 @@ test.describe('Dashboards', () => {
         expect(response.status()).toBe(400);
         const body: ApiErrorResponse = await response.json();
         expect(body.errorCode).toBe(4001);
-        expect(body.message).toContain("Incorrect Request. JSON parse error: Cannot deserialize value of type `java.lang.Boolean` from String \"invalid\": only \"true\" or \"false\" recognized");
+        expect(body.message).toContain(API_ERROR_MESSAGES.incorrectRequestInvalidValue);
     });
 
     test.afterEach(async ({ dashboardApi }) => {
