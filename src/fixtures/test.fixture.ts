@@ -63,13 +63,14 @@ export const test = base.extend<Fixtures>({
             ),
         );
     },
-    createdLaunch: async (_, use) => {
-        const launch = { uuid: '' };
-        await use(launch);
+    createdDashboard: async ({ page }, use) => {
+        void page;
+        await use({ id: 0 });
     },
-    createdDashboard: async (_, use) => {
-        const dashboard = { id: 0 };
-        await use(dashboard);
+
+    createdLaunch: async ({ page }, use) => {
+        void page;
+        await use({ uuid: '' });
     },
 });
 
