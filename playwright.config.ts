@@ -16,7 +16,7 @@ dotenv.config({
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './src/tests/playwright',
+  testDir: './src/tests',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -50,42 +50,28 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
 
-  /* Configure projects for major browsers */
   projects: [
+    // API tests
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+        name: 'api',
+        testMatch: '**/api/**/*.spec.ts',
     },
-
+    // UI tests
     {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+        name: 'chromium',
+        testMatch: '**/playwright/*.spec.ts',
+        use: { ...devices['Desktop Chrome'] },
     },
-
     {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+        name: 'firefox',
+        testMatch: '**/playwright/*.spec.ts',
+        use: { ...devices['Desktop Firefox'] },
     },
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
+    {
+        name: 'webkit',
+        testMatch: '**/playwright/*.spec.ts',
+        use: { ...devices['Desktop Safari'] },
+    },
   ],
 
   /* Run your local dev server before starting the tests */
