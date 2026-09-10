@@ -6,7 +6,7 @@ export abstract class BasePage {
     readonly locatorForNotificationMessage: Locator;
     
     constructor(protected readonly page: Page) {
-        this.locatorForNotificationMessage = page.locator("div[class*='notificationList'] h2");
+        this.locatorForNotificationMessage = page.locator('div[class*=\'notificationList\'] h2');
     }
 
     async navigate(url: string): Promise<void> {
@@ -18,7 +18,7 @@ export abstract class BasePage {
     }
 
     async waitForTimeout(timeoutMs: number) {
-        this.page.waitForTimeout(timeoutMs);
+        await this.page.waitForTimeout(timeoutMs);
     }
     
     protected getElement(path: string): Locator {
@@ -26,6 +26,8 @@ export abstract class BasePage {
             .split('>')
             .map(part => part.trim())
             .filter(Boolean);
+        // Dynamic Page Object property traversal requires an intermediate mutable reference.
+        // eslint-disable-next-line @typescript-eslint/no-this-alias, @typescript-eslint/no-explicit-any
         let current: any = this;
         for (let i = 0; i < parts.length; i++) {
             const part = parts[i];
