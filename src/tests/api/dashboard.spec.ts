@@ -8,13 +8,8 @@ import { ApiErrorResponse } from '../../api/models/errorResponse';
 import { API_ERROR_MESSAGES, invalidLaunchId } from 'src/business/constants';
 
 test.describe('Dashboards', () => {
-    let createdDashboardId: number;
 
-    test.beforeEach(() => {
-        createdDashboardId = 0;
-    });
-
-    test('Patch dashboard', async ({ dashboardApi }) => {
+    test('Patch dashboard', async ({ dashboardApi, createdDashboard }) => {
         // Create dashboard at first
         const timestamp = new Date().toISOString();
         const dashboardsResponse = await dashboardApi.createDashboard({
@@ -22,11 +17,10 @@ test.describe('Dashboards', () => {
         });
 
         expect(dashboardsResponse.status()).toBe(201);
-        const createdDashboard: CreateDashboardResponse= await dashboardsResponse.json();
-        expect(createdDashboard.id).toBeTruthy();
-        createdDashboardId = +createdDashboard.id;
-
-        const patchResponse = await dashboardApi.patchDashboard(createdDashboard.id, { locked: true });
+        const createdDashboardResponse: CreateDashboardResponse= await dashboardsResponse.json();
+        expect(createdDashboardResponse.id).toBeTruthy();
+        createdDashboard.id = +createdDashboardResponse.id;
+        const patchResponse = await dashboardApi.patchDashboard(createdDashboardResponse.id, { locked: true });
         expect(patchResponse.status()).toBe(200);
         const body: PatchDashboardResponse = await patchResponse.json();
         expect(body.message).toBe('Dashboard has been updated successfully');
@@ -41,18 +35,18 @@ test.describe('Dashboards', () => {
         expect(body.message).toContain(API_ERROR_MESSAGES.notFoundError);
     });
 
-    test('Patch dashboard with invalid locked value', async ({ dashboardApi }) => {
+    test('Patch dashboard with invalid locked value', async ({ dashboardApi, createdDashboard}) => {
         // Create dashboard at first
         const timestamp = new Date().toISOString();
         const createResponse = await dashboardApi.createDashboard({
             name: `Demo dashboard ${timestamp}`,
         });
         expect(createResponse.status()).toBe(201);
-        const createdDashboard: CreateDashboardResponse = await createResponse.json();
-        createdDashboardId = +createdDashboard.id;
+        const createdDashboardResponse: CreateDashboardResponse = await createResponse.json();
+        createdDashboard.id = +createdDashboardResponse.id;
 
         const response = await dashboardApi.patchDashboard(
-            createdDashboard.id,
+            createdDashboardResponse.id,
             {
                 locked: 'invalid',
             } as unknown as PatchDashboardRequest,
@@ -64,11 +58,11 @@ test.describe('Dashboards', () => {
         expect(body.message).toContain(API_ERROR_MESSAGES.incorrectRequestInvalidValue);
     });
 
-    test.afterEach(async ({ dashboardApi }) => {
-        if (!createdDashboardId) return;
+    test.afterEach(async ({ dashboardApi, createdDashboard }) => {
+        if (!createdDashboard.id) return;
 
         // DELETE dashboard
-        const deleteResponse = await dashboardApi.deleteDashboard(createdDashboardId);
+        const deleteResponse = await dashboardApi.deleteDashboard(+createdDashboard.id);
         expect(deleteResponse.status()).toBe(200);
     });
 });

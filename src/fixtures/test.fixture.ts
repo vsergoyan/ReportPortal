@@ -1,6 +1,5 @@
 import { test as base } from '@playwright/test';
-import { LoginPage } from '../business/pages';
-import { LaunchesPage } from '../business/pages';
+import { LoginPage, LaunchesPage } from '../business/pages';
 import { logger } from '../core/logger';
 import { ApiClient } from '../api/clients/apiClient';
 import { PlaywrightApiClient } from '../api/clients/playwrightApiClient';
@@ -16,6 +15,12 @@ type Fixtures = {
     apiClient: ApiClient;
     launchesApi: LaunchesApi;
     dashboardApi: DashboardApi;
+    createdLaunch: {
+        uuid: string;
+    };
+    createdDashboard: {
+        id: number;
+    };
 };
 
 export const test = base.extend<Fixtures>({
@@ -57,6 +62,14 @@ export const test = base.extend<Fixtures>({
                 config.reportPortalProject,
             ),
         );
+    },
+    createdLaunch: async (_, use) => {
+        const launch = { uuid: '' };
+        await use(launch);
+    },
+    createdDashboard: async (_, use) => {
+        const dashboard = { id: 0 };
+        await use(dashboard);
     },
 });
 

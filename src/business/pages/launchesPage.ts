@@ -25,7 +25,7 @@ export class LaunchesPage extends BasePage {
         this.compareLaunchesModal = new CompareLaunchesModal(
             page.locator('//div[contains(@class,"modal-window")][.//span[text()="Compare launches"]]')
         );
-        this.breadcrumbItems = this.page.locator('span[class*="breadcrumb__link-item"]')
+        this.breadcrumbItems = this.page.locator('span[class*="breadcrumb__link-item"]');
     }
 
     getLaunchLocatorByIndex (index: number): Locator {

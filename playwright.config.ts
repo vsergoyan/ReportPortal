@@ -28,7 +28,7 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     [
-      "@reportportal/agent-js-playwright",
+      '@reportportal/agent-js-playwright',
       {
         endpoint: process.env.RP_ENDPOINT,
         project: process.env.RP_PROJECT,
@@ -36,8 +36,8 @@ export default defineConfig({
         launch: `Playwright (${process.env.TEST_ENV || 'local'})`,
         attributes: [
           {
-            key: "framework",
-            value: "playwright"
+            key: 'framework',
+            value: 'playwright'
           }
         ]
       }

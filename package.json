@@ -24,7 +24,9 @@
     "test:bdd:parallel": "TEST_ENV=web cucumber-js --parallel 4",
     "test:api": "TEST_ENV=web playwright test --project=api",
     "test:api:playwright": "TEST_ENV=web API_CLIENT=playwright playwright test --project=api",
-    "test:api:axios": "TEST_ENV=web API_CLIENT=axios playwright test --project=api"
+    "test:api:axios": "TEST_ENV=web API_CLIENT=axios playwright test --project=api",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "repository": {
     "type": "git",
@@ -38,15 +40,19 @@
   "homepage": "https://github.com/vardeniSergoyan/ReportPortal#readme",
   "devDependencies": {
     "@cucumber/cucumber": "^13.2.0",
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.61.1",
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
     "@types/node": "^26.1.1",
     "chai": "^6.2.2",
+    "eslint": "^10.9.1",
+    "globals": "^17.11.0",
     "mocha": "^11.7.6",
     "ts-mocha": "^11.1.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.68.0"
   },
   "dependencies": {
     "@reportportal/agent-js-playwright": "^5.4.1",

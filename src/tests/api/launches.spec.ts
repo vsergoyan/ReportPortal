@@ -11,11 +11,6 @@ import { LaunchStatus } from '../../api/models/launchStatus';
 import { invalidLaunchId, API_ERROR_MESSAGES } from '../../business/constants';
 
 test.describe('Launches', () => {
-    let createdLaunchUuid: string;
-
-    test.beforeEach(() => {
-        createdLaunchUuid = '';
-    });
 
     test('Get launches', async ({ launchesApi }) => {
         const response = await launchesApi.getLaunches();
@@ -32,7 +27,7 @@ test.describe('Launches', () => {
         }
     });
 
-    test('Get launch with valid id', async ({ launchesApi }) => {
+    test('Get launch with valid id', async ({ launchesApi, createdLaunch }) => {
         // Create launch at first
         const timestamp = new Date().toISOString();
         const createLaunchResponse = await launchesApi.createLaunch({
@@ -40,15 +35,15 @@ test.describe('Launches', () => {
             name: `Demo launch ${timestamp}`,
         });
         expect(createLaunchResponse.status()).toBe(201);
-        const createdLaunch: CreateLaunchResponse = await createLaunchResponse.json();
-        createdLaunchUuid = createdLaunch.id;
+        const createdLaunchResponse: CreateLaunchResponse = await createLaunchResponse.json();
+        createdLaunch.uuid = createdLaunchResponse.id;
 
-        const getLaunchResponse = await launchesApi.getLaunch(createdLaunch.id);
+        const getLaunchResponse = await launchesApi.getLaunch(createdLaunchResponse.id);
         expect(getLaunchResponse.status()).toBe(200);
 
         const launch: LaunchResponse = await getLaunchResponse.json();
         expect(launch.id).toBeGreaterThan(0);
-        expect(launch.uuid).toBe(createdLaunch.id);
+        expect(launch.uuid).toBe(createdLaunchResponse.id);
         expect(launch.name).toBe(`Demo launch ${timestamp}`);
     });
 
@@ -61,18 +56,18 @@ test.describe('Launches', () => {
         expect(body.message).toContain(API_ERROR_MESSAGES.notFoundError);
     });
 
-    test('Create launch', async ({ launchesApi }) => {
+    test('Create launch', async ({ launchesApi, createdLaunch }) => {
         const timestamp = new Date().toISOString();
         const response = await launchesApi.createLaunch({
             startTime: timestamp,
             name: `Demo launch ${timestamp}`,
         });
         expect(response.status()).toBe(201);
-        const createdLaunch: CreateLaunchResponse = await response.json();
-        createdLaunchUuid = createdLaunch.id;
+        const createdLaunchResponse: CreateLaunchResponse = await response.json();
+        createdLaunch.uuid = createdLaunchResponse.id;
 
-        expect(createdLaunch.id).toBeTruthy();
-        expect(createdLaunch.number).toBeGreaterThan(0);
+        expect(createdLaunchResponse.id).toBeTruthy();
+        expect(createdLaunchResponse.number).toBeGreaterThan(0);
     });
 
     test('Create launch with invalid start time', async ({ launchesApi }) => {
@@ -98,22 +93,22 @@ test.describe('Launches', () => {
         expect(body.message).toContain(API_ERROR_MESSAGES.incorrectRequestEmptyName);
     });
 
-    test('Finish launch', async ({ launchesApi }) => {
+    test('Finish launch', async ({ launchesApi, createdLaunch }) => {
         const timestamp = new Date().toISOString();
         const createResponse = await launchesApi.createLaunch({
             startTime: timestamp,
             name: `Demo launch ${timestamp}`,
         });
         expect(createResponse.status()).toBe(201);
-        const createdLaunch: CreateLaunchResponse = await createResponse.json();
-        expect(createdLaunch.id).toBeTruthy();
-        createdLaunchUuid = createdLaunch.id;
+        const createdLaunchResponse: CreateLaunchResponse = await createResponse.json();
+        expect(createdLaunchResponse.id).toBeTruthy();
+        createdLaunch.uuid = createdLaunchResponse.id;
 
-        const finishResponse = await launchesApi.finishLaunch(createdLaunch.id, LaunchStatus.PASSED);
+        const finishResponse = await launchesApi.finishLaunch(createdLaunchResponse.id, LaunchStatus.PASSED);
         expect(finishResponse.status()).toBe(200);
 
         const body: FinishLaunchResponse = await finishResponse.json();
-        expect(body.id).toBe(createdLaunch.id);
+        expect(body.id).toBe(createdLaunchResponse.id);
         expect(body.number).toBeGreaterThan(0);
     });
 
@@ -126,17 +121,17 @@ test.describe('Launches', () => {
         expect(body.message).toContain(API_ERROR_MESSAGES.notFoundError);
     });
 
-    test('Finish launch with invalid status', async ({ launchesApi }) => {
+    test('Finish launch with invalid status', async ({ launchesApi, createdLaunch }) => {
         const timestamp = new Date().toISOString();
         const createResponse = await launchesApi.createLaunch({
             startTime: timestamp,
             name: `Demo launch ${timestamp}`,
         });
         expect(createResponse.status()).toBe(201);
-        const createdLaunch: CreateLaunchResponse = await createResponse.json();
-        createdLaunchUuid = createdLaunch.id;
+        const createdLaunchResponse: CreateLaunchResponse = await createResponse.json();
+        createdLaunch.uuid = createdLaunchResponse.id;
 
-        const finishResponse = await launchesApi.finishLaunch(createdLaunch.id, 'INVALID_STATUS' as LaunchStatus,);
+        const finishResponse = await launchesApi.finishLaunch(createdLaunchResponse.id, 'INVALID_STATUS' as LaunchStatus,);
         expect(finishResponse.status()).toBe(400);
 
         const body: ApiErrorResponse = await finishResponse.json();
@@ -144,7 +139,7 @@ test.describe('Launches', () => {
         expect(body.message).toContain(API_ERROR_MESSAGES.incorrectRequestValueNotAllowed);
     });
 
-    test('Delete launch', async ({ launchesApi }) => {
+    test('Delete launch', async ({ launchesApi, createdLaunch }) => {
         // Create launch at first
         const timestamp = new Date().toISOString();
         const createResponse = await launchesApi.createLaunch({
@@ -152,15 +147,15 @@ test.describe('Launches', () => {
             name: `Demo launch ${timestamp}`,
         });
         expect(createResponse.status()).toBe(201);
-        const createdLaunch: CreateLaunchResponse = await createResponse.json();
-        createdLaunchUuid = createdLaunch.id;
+        const createdLaunchResponse: CreateLaunchResponse = await createResponse.json();
+        createdLaunch.uuid = createdLaunchResponse.id;
 
         // Finish it
-        const finishResponse = await launchesApi.finishLaunch(createdLaunch.id, LaunchStatus.PASSED);
+        const finishResponse = await launchesApi.finishLaunch(createdLaunchResponse.id, LaunchStatus.PASSED);
         expect(finishResponse.status()).toBe(200);
 
         // Get the real id (not uuid), becuase it's needed for delete endpoint
-        const getResponse = await launchesApi.getLaunch(createdLaunchUuid);
+        const getResponse = await launchesApi.getLaunch(createdLaunch.uuid);
         expect(getResponse.status()).toBe(200);
         const launch: LaunchResponse = await getResponse.json();
 
@@ -168,7 +163,7 @@ test.describe('Launches', () => {
         const deleteResponse = await launchesApi.deleteLaunch(launch.id);
         expect(deleteResponse.status()).toBe(200);
 
-        const getAfterDeleteResponse = await launchesApi.getLaunch(createdLaunchUuid);
+        const getAfterDeleteResponse = await launchesApi.getLaunch(createdLaunch.uuid);
         expect(getAfterDeleteResponse.status()).toBe(404);
     });
 
@@ -181,18 +176,18 @@ test.describe('Launches', () => {
         expect(body.message).toContain(API_ERROR_MESSAGES.notFoundError);
     });
 
-    test.afterEach(async ({ launchesApi }) => {
-        if (!createdLaunchUuid) return;
+    test.afterEach(async ({ launchesApi, createdLaunch }) => {
+        if (!createdLaunch.uuid) return;
 
         // GET launch using UUID
-        const getResponse = await launchesApi.getLaunch(createdLaunchUuid);
+        const getResponse = await launchesApi.getLaunch(createdLaunch.uuid);
         if (getResponse.status() === 404) return;
         expect(getResponse.status()).toBe(200);
         const launch: LaunchResponse = await getResponse.json();
 
         // Finish only if the launch is still running
         if (launch.status === 'IN_PROGRESS') {
-            const finishResponse = await launchesApi.finishLaunch(createdLaunchUuid, LaunchStatus.PASSED);
+            const finishResponse = await launchesApi.finishLaunch(createdLaunch.uuid, LaunchStatus.PASSED);
             expect(finishResponse.status()).toBe(200);
         }
 

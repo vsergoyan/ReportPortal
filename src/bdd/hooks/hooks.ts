@@ -3,8 +3,8 @@ import {
     AfterAll,
     Before,
     After,
+    setDefaultTimeout
 } from '@cucumber/cucumber';
-import { setDefaultTimeout } from '@cucumber/cucumber';
 
 setDefaultTimeout(30_000);
 
