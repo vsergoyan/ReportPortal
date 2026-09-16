@@ -6,6 +6,7 @@ node_modules/
 /playwright/.auth/
 .env.local
 .env.web
+cypress/screenshots
 
 # Logs
 *.log

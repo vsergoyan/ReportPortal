@@ -25,6 +25,7 @@
     "test:api": "TEST_ENV=web playwright test --project=api",
     "test:api:playwright": "TEST_ENV=web API_CLIENT=playwright playwright test --project=api",
     "test:api:axios": "TEST_ENV=web API_CLIENT=axios playwright test --project=api",
+    "test:cypress": "TEST_ENV=web cypress run --browser edge --headed",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
@@ -48,6 +49,7 @@
     "chai": "^6.2.2",
     "eslint": "^10.9.1",
     "globals": "^17.11.0",
+    "cypress": "^16.0.0",
     "mocha": "^11.7.6",
     "ts-mocha": "^11.1.0",
     "ts-node": "^10.9.2",

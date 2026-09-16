@@ -10,6 +10,7 @@ export interface LaunchResponse {
     number: number;
     startTime: string;
     status: string;
+    statistics: LaunchStatistics;
 }
 
 export interface PageLaunchResponse {
@@ -29,4 +30,17 @@ export interface FinishLaunchResponse {
     id: string;
     number: number;
     link: string;
+}
+
+export interface LaunchStatistics {
+    executions: {
+        total?: number;
+        passed?: number;
+        failed?: number;
+        skipped?: number;
+    };
+    defects: Record<string, {
+        total: number;
+        [key: string]: number;
+    }>;
 }

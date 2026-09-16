@@ -9,10 +9,27 @@ export class LaunchesApi {
         private readonly projectName: string,
     ) {}
 
-    async getLaunches(): Promise<ApiResponse> {
-        return this.apiClient.get(`/${this.projectName}/launch`);
+    async getLaunches({
+        page = 1,
+        size = 50,
+        sort = 'startTime,number,DESC',
+    }: {
+        page?: number;
+        size?: number;
+        sort?: string;
+    } = {}): Promise<ApiResponse> {
+        return this.apiClient.get(
+            `/${this.projectName}/launch`,
+            {
+                params: {
+                    'page.page': page,
+                    'page.size': size,
+                    'page.sort': sort,
+                },
+            },
+        );
     }
-
+        
     async getLaunch(launchId: string): Promise<ApiResponse> {
         return this.apiClient.get(
             `/${this.projectName}/launch/${launchId}`,

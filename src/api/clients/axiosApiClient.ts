@@ -81,6 +81,7 @@ export class AxiosApiClient implements ApiClient {
         const response = await this.client.request({
             method,
             url: endpoint,
+            params: options.params,
             data: options.data,
             headers: {
                 ...this.authenticator.getHeaders(),
