@@ -31,3 +31,14 @@ export const API_ERROR_MESSAGES = {
 };
 
 export type MessageKey = keyof typeof messages;
+
+export const LAUNCH_STATISTIC_COLUMNS = {
+    TOTAL: 'total-col',
+    PASSED: 'passed-col',
+    FAILED: 'failed-col',
+    SKIPPED: 'skipped-col',
+    PRODUCT_BUG: 'pb-col',
+    AUTO_BUG: 'ab-col',
+    SYSTEM_ISSUE: 'si-col',
+    TO_INVESTIGATE: 'ti-col',
+} as const;
