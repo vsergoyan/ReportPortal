@@ -92,9 +92,7 @@ describe('ReportPortal Launches sorting', () => {
         });
 
         jsExecutor.click(launchesPage.getButtonByText('Cancel').getSelector());
-        void compareLaunchesModal.isVisible().then((isVisible) => {
-            expect(isVisible).to.equal(false);
-        });
+        cy.get(compareLaunchesModal.getSelector()).should('not.exist');
     });
 
     it('Should be able to delete launch', () => {

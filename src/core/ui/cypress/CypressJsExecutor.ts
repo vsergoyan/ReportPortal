@@ -37,37 +37,26 @@ export class CypressJsExecutor implements IJsExecutor {
         cy.get(sourceSelector).then(($source) => {
             cy.get(targetSelector).then(($target) => {
                 const dataTransfer = new DataTransfer();
+                const dragEventOptions = {
+                    bubbles: true,
+                    cancelable: true,
+                    dataTransfer,
+                };
 
                 $source[0].dispatchEvent(
-                    new DragEvent('dragstart', {
-                        bubbles: true,
-                        cancelable: true,
-                        dataTransfer,
-                    }),
+                    new DragEvent('dragstart', dragEventOptions),
                 );
 
                 $target[0].dispatchEvent(
-                    new DragEvent('dragover', {
-                        bubbles: true,
-                        cancelable: true,
-                        dataTransfer,
-                    }),
+                    new DragEvent('dragover', dragEventOptions),
                 );
 
                 $target[0].dispatchEvent(
-                    new DragEvent('drop', {
-                        bubbles: true,
-                        cancelable: true,
-                        dataTransfer,
-                    }),
+                    new DragEvent('drop', dragEventOptions),
                 );
 
                 $source[0].dispatchEvent(
-                    new DragEvent('dragend', {
-                        bubbles: true,
-                        cancelable: true,
-                        dataTransfer,
-                    }),
+                    new DragEvent('dragend', dragEventOptions),
                 );
             });
         });

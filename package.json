@@ -25,7 +25,8 @@
     "test:api": "TEST_ENV=web playwright test --project=api",
     "test:api:playwright": "TEST_ENV=web API_CLIENT=playwright playwright test --project=api",
     "test:api:axios": "TEST_ENV=web API_CLIENT=axios playwright test --project=api",
-    "test:cypress": "TEST_ENV=web cypress run --browser edge --headed",
+    "test:cypress": "TEST_ENV=web cypress run",
+    "test:cypress:debug": "TEST_ENV=web cypress run --browser edge --headed",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
