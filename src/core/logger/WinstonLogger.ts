@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'node:fs';
 import { createLogger, format, transports } from 'winston';
 import { ILogger } from './ILogger';
 
@@ -16,8 +16,13 @@ export class WinstonLogger implements ILogger {
             }),
             format.errors({ stack: true }),
             format.printf(({ timestamp, level, message, stack }) => {
+                const formattedStack =
+                    typeof stack === 'string'
+                        ? stack
+                        : JSON.stringify(stack);
+
                 return stack
-                    ? `[${timestamp}] ${level.toUpperCase()} : ${message}\n${stack}`
+                    ? `[${timestamp}] ${level.toUpperCase()} : ${message}\n${formattedStack}`
                     : `[${timestamp}] ${level.toUpperCase()} : ${message}`;
             }),
         ),
