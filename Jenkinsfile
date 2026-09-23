@@ -1,0 +1,88 @@
+pipeline {
+    agent any
+
+    environment {
+        PATH = "/usr/local/bin:${env.PATH}"
+
+        BASE_URL = "https://reportportal.epam.com/ui/"
+        RP_ENDPOINT = "https://rp.epam.com/api/v1"
+        RP_PROJECT = "VSERGOYAN_PERSONAL"
+
+        HEADLESS = "true"
+        TEST_ENV = "web"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Install') {
+            steps {
+                sh 'npm ci'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'npm run build'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                withCredentials([
+                    string(
+                        credentialsId: 'rp-api-key',
+                        variable: 'RP_API_KEY'
+                    ),
+                    usernamePassword(
+                        credentialsId: 'rp-credentials',
+                        usernameVariable: 'RP_USERNAME',
+                        passwordVariable: 'RP_PASSWORD'
+                    )
+                ]) {
+                    sh '''
+                        test -n "$RP_USERNAME" && echo "RP_USERNAME is set" || echo "RP_USERNAME is NOT set"
+                        test -n "$RP_PASSWORD" && echo "RP_PASSWORD is set" || echo "RP_PASSWORD is NOT set"
+                        test -n "$RP_API_KEY" && echo "RP_API_KEY is set" || echo "RP_API_KEY is NOT set"
+                        test -n "$BASE_URL" && echo "BASE_URL is set" || echo "BASE_URL is NOT set"
+
+                        npm run test:web
+                    '''
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    def scannerHome = tool 'SonarQubeScanner'
+
+                    withSonarQubeEnv('SonarQube') {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            junit(
+                testResults: 'test-results/junit.xml',
+                allowEmptyResults: true
+            )
+        }
+    }
+}
