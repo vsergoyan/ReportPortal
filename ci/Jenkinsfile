@@ -4,7 +4,6 @@ pipeline {
     environment {
         PATH = "/usr/local/bin:${env.PATH}"
 
-        // CI pipeline configuration
         BASE_URL = "https://reportportal.epam.com/ui/"
         RP_ENDPOINT = "https://rp.epam.com/api/v1"
         RP_PROJECT = "VSERGOYAN_PERSONAL"
