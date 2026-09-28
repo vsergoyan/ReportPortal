@@ -8,6 +8,8 @@ pipeline {
         RP_ENDPOINT = "https://rp.epam.com/api/v1"
         RP_PROJECT = "VSERGOYAN_PERSONAL"
 
+        JIRA_BASE_URL = "https://jiraeu.epam.com"
+
         HEADLESS = "true"
         TEST_ENV = "web"
     }
@@ -46,6 +48,10 @@ pipeline {
                     string(
                         credentialsId: 'teams-webhook-url',
                         variable: 'TEAMS_WEBHOOK_URL'
+                    ),
+                    string(
+                        credentialsId: 'jira-api-token',
+                        variable: 'JIRA_API_TOKEN'
                     )
                 ]) {
                     sh '''
