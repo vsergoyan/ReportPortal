@@ -52,6 +52,9 @@ export default defineConfig({
     [
         './src/integrations/teams/teamsReporter.ts',
     ],
+    [
+        './src/integrations/jira/jiraReporter.ts',
+    ],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
