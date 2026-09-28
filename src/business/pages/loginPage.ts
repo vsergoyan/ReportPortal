@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { BasePage } from './basePage';
+import { logger } from '../../core/logger';
 
 export class LoginPage extends BasePage {
     readonly loginButton: Locator;
@@ -13,13 +14,17 @@ export class LoginPage extends BasePage {
         this.passwordInput = page.locator('input[name="password"]');
     }
 
-    async open() {
+    async open(): Promise<void> {
+        logger.info('Opening ReportPortal login page');
         await this.navigate('/');
     }
 
-    async login(username: string, password: string) {
+    async login(username: string, password: string): Promise<void> {
+        logger.debug('Filling login credentials');
         await this.usernameInput.fill(username);
         await this.passwordInput.fill(password);
         await this.loginButton.click();
+
+        logger.info('Login form submitted');
     }
 }

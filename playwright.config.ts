@@ -34,7 +34,9 @@ export default defineConfig({
         endpoint: process.env.RP_ENDPOINT,
         project: process.env.RP_PROJECT,
         apiKey: process.env.RP_API_KEY,
-        launch: `Playwright (${process.env.TEST_ENV || 'local'})`,
+        launch: process.env.JENKINS_URL
+          ? `Jenkins #${process.env.BUILD_NUMBER} - Playwright (${process.env.TEST_ENV || 'web'})`
+          : `Playwright (${process.env.TEST_ENV || 'local'})`,
         attributes: [
           {
             key: 'framework',

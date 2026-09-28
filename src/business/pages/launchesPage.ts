@@ -3,6 +3,7 @@ import { BasePage } from './basePage';
 import { DeleteLaunchModal } from '../components/deleteLaunchModal';
 import { CompareLaunchesModal } from '../components/compareLaunchModal';
 import { API_PATHS } from '../constants';
+import { logger } from '../../core/logger';
 
 export class LaunchesPage extends BasePage {
     readonly launches: Locator;
@@ -20,7 +21,7 @@ export class LaunchesPage extends BasePage {
         this.deleteMenuItem = page.locator('//div[contains(@class, "menu-item")]/span[text()="Delete"]');
         this.deleteLaunchModal = new DeleteLaunchModal(
             page.locator('//div[contains(@class,"modal-window")][.//span[text()="Delete launch"]]')
-        );   
+        );
         this.compareMenuItem = page.locator('//div[contains(@class, "menu-item")]/span[text()="Compare"]');
         this.compareLaunchesModal = new CompareLaunchesModal(
             page.locator('//div[contains(@class,"modal-window")][.//span[text()="Compare launches"]]')
@@ -28,7 +29,7 @@ export class LaunchesPage extends BasePage {
         this.breadcrumbItems = this.page.locator('span[class*="breadcrumb__link-item"]');
     }
 
-    getLaunchLocatorByIndex (index: number): Locator {
+    getLaunchLocatorByIndex(index: number): Locator {
         return this.page.locator(`div[data-id]:nth-child(${index + 1})`);
     }
 
@@ -37,18 +38,23 @@ export class LaunchesPage extends BasePage {
     }
 
     getLaunchNameLocatorByIndex(index: number): Locator {
-        return this.getLaunchLocatorByIndex(index).locator('td[class*="name-col"] div[class*="itemInfo__main-info"]');
+        return this.getLaunchLocatorByIndex(index).locator(
+            'td[class*="name-col"] div[class*="itemInfo__main-info"]'
+        );
     }
 
     async getLaunchName(index: number): Promise<string> {
         return this.getText(this.getLaunchNameLocatorByIndex(index));
     }
 
-    async open() {
+    async open(): Promise<void> {
+        logger.info('Opening ReportPortal Launches page');
         await this.navigate(`/#${this.config.reportPortalProject}/launches`);
     }
 
     async deleteLaunchByOrder(i: number): Promise<void> {
+        logger.info(`Deleting launch by order: ${i}`);
+
         await this.getCheckIconLocatorByIndex(i).click();
         await this.actionsButton.click();
         await this.deleteMenuItem.click();
@@ -61,6 +67,8 @@ export class LaunchesPage extends BasePage {
             ),
             this.deleteLaunchModal.deleteButton.click(),
         ]);
+
+        logger.debug('Launch deleted successfully');
     }
 
     async getLastBreadcrumbText(): Promise<string> {
@@ -68,10 +76,13 @@ export class LaunchesPage extends BasePage {
     }
 
     async openLaunchByIndex(index: number): Promise<void> {
+        logger.info(`Opening launch by index: ${index}`);
+
         const launchPath = API_PATHS.launch.replace(
             '{project}',
             this.config.reportPortalProject.toLocaleLowerCase()
         );
+
         await Promise.all([
             this.page.waitForResponse(response =>
                 response.request().method() === 'GET' &&
@@ -80,5 +91,7 @@ export class LaunchesPage extends BasePage {
             ),
             this.getLaunchNameLocatorByIndex(index).click(),
         ]);
+
+        logger.debug('Launch view opened successfully');
     }
 }
